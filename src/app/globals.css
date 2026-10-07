@@ -1,26 +1,106 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: light;
+
+  --background: #f4f7f7;
+  --foreground: #0f1f1e;
+  --card: #ffffff;
+  --card-foreground: #0f1f1e;
+  --border: #e3eaea;
+  --input: #e3eaea;
+  --muted: #eaf0f0;
+  --muted-foreground: #5b6e6d;
+
+  --primary: #157c76;
+  --primary-foreground: #ffffff;
+  --primary-soft: #e3f5f4;
+  --accent: #19faee;
+  --accent-foreground: #0b2b29;
+  --ring: #157c76;
+
+  --success: #16a34a;
+  --danger: #dc2626;
+  --warning: #f59e0b;
+
+  --chart-1: #157c76;
+  --chart-2: #19faee;
+  --chart-3: #f5a524;
+  --chart-4: #6366f1;
+  --chart-5: #94a3b8;
+}
+
+.dark {
+  color-scheme: dark;
+
+  --background: #0a0a0a;
+  --foreground: #ededed;
+  --card: #121212;
+  --card-foreground: #ededed;
+  --border: #262626;
+  --input: #262626;
+  --muted: #1a1a1a;
+  --muted-foreground: #a3a3a3;
+
+  --primary: #19faee;
+  --primary-foreground: #06201e;
+  --primary-soft: rgb(25 250 238 / 0.12);
+  --accent: #157c76;
+  --accent-foreground: #ffffff;
+  --ring: #19faee;
+
+  --success: #4ade80;
+  --danger: #f87171;
+  --warning: #fbbf24;
 }
 
 @theme inline {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-soft: var(--primary-soft);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-ring: var(--ring);
+
+  --color-success: var(--success);
+  --color-danger: var(--danger);
+  --color-warning: var(--warning);
+
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  *,
+  ::after,
+  ::before {
+    border-color: var(--border);
   }
-}
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
 }
