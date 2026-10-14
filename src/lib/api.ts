@@ -2,12 +2,73 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL;
 import type { Cliente, Barbeiro, Servico } from '@/lib/types';
 
 export async function getTodosClients(): Promise<Cliente[]> {
-    const response = await fetch(`${API_URL}/clientes`);
+    const response = await fetch(`${API_URL}/clientes`, { cache: 'no-store' });
 
     if (!response.ok)
         throw Error('Erro ao buscar clientes');
 
-    return response.json();
+    const clientes: ClienteApiResponse[] = await response.json();
+    return clientes.map(normalizeCliente);
+}
+
+type ClienteApiResponse = Omit<Cliente, 'createdAt' | 'updatedAt'> & {
+    createdAt?: string;
+    updatedAt?: string;
+    created_at?: string;
+    updated_at?: string;
+};
+
+function normalizeCliente(cliente: ClienteApiResponse): Cliente {
+    return {
+        ...cliente,
+        createdAt: cliente.createdAt ?? cliente.created_at ?? '',
+        updatedAt: cliente.updatedAt ?? cliente.updated_at ?? '',
+    };
+}
+
+export type ClienteInput = Pick<Cliente, 'nome' | 'telefone'> & {
+    senha?: string;
+};
+
+export async function getClienteById(id: string): Promise<Cliente> {
+    const response = await fetch(`${API_URL}/clientes/${encodeURIComponent(id)}`, { cache: 'no-store' });
+
+    if (!response.ok)
+        throw Error('Erro ao buscar cliente');
+
+    const cliente: ClienteApiResponse = await response.json();
+    return normalizeCliente(cliente);
+}
+
+export async function createCliente(input: ClienteInput): Promise<void> {
+    const response = await fetch(`${API_URL}/clientes`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(input),
+    });
+
+    if (!response.ok)
+        throw Error('Erro ao criar cliente');
+}
+
+export async function updateCliente(id: string, input: ClienteInput): Promise<void> {
+    const response = await fetch(`${API_URL}/clientes/${encodeURIComponent(id)}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(input),
+    });
+
+    if (!response.ok)
+        throw Error('Erro ao atualizar cliente');
+}
+
+export async function deleteCliente(id: string): Promise<void> {
+    const response = await fetch(`${API_URL}/clientes/${encodeURIComponent(id)}`, {
+        method: 'DELETE',
+    });
+
+    if (!response.ok)
+        throw Error('Erro ao remover cliente');
 }
 
 export async function getTodosServicos(): Promise<Servico[]> {
