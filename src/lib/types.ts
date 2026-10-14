@@ -4,8 +4,8 @@ export interface Cliente {
     telefone: string;
     senha?: string;
     imagemUrl?: string | null;
-    createdAt: Date;
-    updatedAt: Date;
+    createdAt: string;
+    updatedAt: string;
 }
 
 
@@ -18,8 +18,8 @@ export interface Barbeiro {
     senha?: string;
     imagemUrl?: string | null;
     isAdmin: boolean;
-    createdAt: Date;
-    updatedAt: Date;
+    created_at: string;
+    updated_at: string;
 }
 
 export interface Servico {
@@ -30,6 +30,6 @@ export interface Servico {
     duracao: number;
     imagemUrl?: string | null;
     ativo: boolean;
-    createdAt: Date;
-    updatedAt: Date;
+    created_at: string;
+    updated_at: string;
 }
