@@ -7,7 +7,9 @@ import { ArrowLeft, Clock3, LoaderCircle, Phone, Shield, UserRound } from 'lucid
 import { getBarbeiroById } from '@/lib/api';
 import type { Barbeiro } from '@/lib/types';
 
-function formatDate(value: Date) {
+function formatDate(value: string | null | undefined) {
+    if (!value) return 'Data indisponível';
+
     const date = new Date(value);
     if (Number.isNaN(date.getTime())) return 'Data indisponível';
 
@@ -112,8 +114,8 @@ export default function BarbeiroDetailsPage() {
             <section aria-labelledby="profile-record-heading" className="space-y-4">
                 <h2 id="profile-record-heading" className="text-lg font-semibold">Registo</h2>
                 <dl className="grid gap-x-8 sm:grid-cols-2">
-                    <div className="border-t border-border py-4"><dt className="text-xs text-muted-foreground">Criado em</dt><dd className="mt-1 text-sm font-medium">{formatDate(barbeiro.createdAt)}</dd></div>
-                    <div className="border-t border-border py-4"><dt className="text-xs text-muted-foreground">Última atualização</dt><dd className="mt-1 text-sm font-medium">{formatDate(barbeiro.updatedAt)}</dd></div>
+                    <div className="border-t border-border py-4"><dt className="text-xs text-muted-foreground">Criado em</dt><dd className="mt-1 text-sm font-medium">{formatDate(barbeiro.created_at)}</dd></div>
+                    <div className="border-t border-border py-4"><dt className="text-xs text-muted-foreground">Última atualização</dt><dd className="mt-1 text-sm font-medium">{formatDate(barbeiro.updated_at)}</dd></div>
                 </dl>
             </section>
         </div>

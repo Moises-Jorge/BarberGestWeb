@@ -21,7 +21,9 @@ async function fetchDashboardData(): Promise<DashboardData> {
     return { clientes, barbeiros, servicos };
 }
 
-function formatDate(value: Date) {
+function formatDate(value: string | null | undefined) {
+    if (!value) return 'Data indisponível';
+
     const date = new Date(value);
 
     if (Number.isNaN(date.getTime())) return 'Data indisponível';
@@ -85,26 +87,26 @@ export default function DashboardPage() {
                   title: 'Equipa de barbeiros',
                   icon: Scissors,
                   records: [...data.barbeiros]
-                      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+                      .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
                       .slice(0, 5)
                       .map((barbeiro) => ({
                           id: barbeiro.id,
                           name: barbeiro.nome,
                           detail: `${barbeiro.h_entrada}–${barbeiro.h_saida}`,
-                          date: barbeiro.createdAt,
+                          date: barbeiro.created_at,
                       })),
               },
               {
                   title: 'Catálogo de serviços',
                   icon: ClipboardList,
                   records: [...data.servicos]
-                      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+                      .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
                       .slice(0, 5)
                       .map((servico) => ({
                           id: servico.id,
                           name: servico.nome,
                           detail: `${servico.duracao} min · ${servico.ativo ? 'Ativo' : 'Inativo'}`,
-                          date: servico.createdAt,
+                          date: servico.created_at,
                       })),
               },
           ]
@@ -121,7 +123,7 @@ export default function DashboardPage() {
                 <button
                     type="button"
                     onClick={() => void refreshDashboard()}
-                    disabled={isLoading}
+                    // disabled={isLoading}
                     className="inline-flex h-9 items-center gap-2 rounded-lg border border-border bg-card px-3 text-sm font-medium transition-colors hover:bg-primary-soft disabled:cursor-not-allowed disabled:opacity-60"
                 >
                     <RefreshCw className={`size-4 ${isLoading ? 'animate-spin' : ''}`} />
@@ -189,7 +191,7 @@ export default function DashboardPage() {
                                                     <p className="truncate text-sm font-medium">{record.name}</p>
                                                     <p className="mt-0.5 truncate text-xs text-muted-foreground">{record.detail}</p>
                                                 </div>
-                                                <time className="shrink-0 text-xs text-muted-foreground" dateTime={new Date(record.date).toISOString()}>
+                                                <time dateTime={record.date} className="shrink-0 text-xs text-muted-foreground">
                                                     {formatDate(record.date)}
                                                 </time>
                                             </li>
