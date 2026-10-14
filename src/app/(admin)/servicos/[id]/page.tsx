@@ -21,7 +21,7 @@ function formatDate(value: string | null | undefined) {
 }
 
 function formatPrice(price: number) {
-    return new Intl.NumberFormat('pt-PT', { style: 'currency', currency: 'EUR' }).format(price);
+    return new Intl.NumberFormat('pt-AO', { style: 'currency', currency: 'AOA' }).format(price);
 }
 
 export default function ServicoDetailsPage() {
