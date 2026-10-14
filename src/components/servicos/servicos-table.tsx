@@ -18,7 +18,7 @@ type FormValues = {
 const emptyForm: FormValues = { nome: '', descricao: '', preco: '', duracao: '', ativo: true };
 
 function formatPrice(price: number) {
-    return new Intl.NumberFormat('pt-PT', { style: 'currency', currency: 'EUR' }).format(price);
+    return new Intl.NumberFormat('pt-AO', { style: 'currency', currency: 'AOA' }).format(price);
 }
 
 function formatDate(value: string | null | undefined) {
@@ -232,7 +232,7 @@ export function ServicosTable() {
                             <label className="block space-y-1.5 text-sm font-medium">Nome<input required maxLength={120} value={form.nome} onChange={(event) => setForm({ ...form, nome: event.target.value })} className="h-10 w-full rounded-md border border-input bg-background px-3 font-normal outline-none focus:border-primary" /></label>
                             <label className="block space-y-1.5 text-sm font-medium">Descrição <span className="font-normal text-muted-foreground">(opcional)</span><textarea rows={3} maxLength={1000} value={form.descricao} onChange={(event) => setForm({ ...form, descricao: event.target.value })} className="w-full resize-y rounded-md border border-input bg-background px-3 py-2 font-normal outline-none focus:border-primary" /></label>
                             <div className="grid grid-cols-2 gap-3">
-                                <label className="block space-y-1.5 text-sm font-medium">Preço (€)<input required type="number" min="0" step="0.01" value={form.preco} onChange={(event) => setForm({ ...form, preco: event.target.value })} className="h-10 w-full rounded-md border border-input bg-background px-3 font-normal outline-none focus:border-primary" /></label>
+                                <label className="block space-y-1.5 text-sm font-medium">Preço (Kz)<input required type="number" min="0" step="0.01" value={form.preco} onChange={(event) => setForm({ ...form, preco: event.target.value })} className="h-10 w-full rounded-md border border-input bg-background px-3 font-normal outline-none focus:border-primary" /></label>
                                 <label className="block space-y-1.5 text-sm font-medium">Duração (min)<input required type="number" min="1" step="1" value={form.duracao} onChange={(event) => setForm({ ...form, duracao: event.target.value })} className="h-10 w-full rounded-md border border-input bg-background px-3 font-normal outline-none focus:border-primary" /></label>
                             </div>
                             <label className="flex cursor-pointer items-center gap-3 rounded-md border border-border p-3 text-sm">
