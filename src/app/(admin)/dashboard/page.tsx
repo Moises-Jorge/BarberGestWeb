@@ -70,46 +70,46 @@ export default function DashboardPage() {
 
     const sections = data
         ? [
-              {
-                  title: 'Clientes recentes',
-                  icon: Users,
-                  records: [...data.clientes]
-                      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-                      .slice(0, 5)
-                      .map((cliente) => ({
-                          id: cliente.id,
-                          name: cliente.nome,
-                          detail: cliente.telefone,
-                          date: cliente.createdAt,
-                      })),
-              },
-              {
-                  title: 'Equipa de barbeiros',
-                  icon: Scissors,
-                  records: [...data.barbeiros]
-                      .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
-                      .slice(0, 5)
-                      .map((barbeiro) => ({
-                          id: barbeiro.id,
-                          name: barbeiro.nome,
-                          detail: `${barbeiro.h_entrada}–${barbeiro.h_saida}`,
-                          date: barbeiro.created_at,
-                      })),
-              },
-              {
-                  title: 'Catálogo de serviços',
-                  icon: ClipboardList,
-                  records: [...data.servicos]
-                      .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
-                      .slice(0, 5)
-                      .map((servico) => ({
-                          id: servico.id,
-                          name: servico.nome,
-                          detail: `${servico.duracao} min · ${servico.ativo ? 'Ativo' : 'Inativo'}`,
-                          date: servico.created_at,
-                      })),
-              },
-          ]
+            {
+                title: 'Clientes recentes',
+                icon: Users,
+                records: [...data.clientes]
+                    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+                    .slice(0, 5)
+                    .map((cliente) => ({
+                        id: cliente.id,
+                        name: cliente.nome,
+                        detail: cliente.telefone,
+                        date: cliente.createdAt,
+                    })),
+            },
+            {
+                title: 'Equipa de barbeiros',
+                icon: Scissors,
+                records: [...data.barbeiros]
+                    .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+                    .slice(0, 5)
+                    .map((barbeiro) => ({
+                        id: barbeiro.id,
+                        name: barbeiro.nome,
+                        detail: `${barbeiro.h_entrada}–${barbeiro.h_saida}`,
+                        date: barbeiro.created_at,
+                    })),
+            },
+            {
+                title: 'Catálogo de serviços',
+                icon: ClipboardList,
+                records: [...data.servicos]
+                    .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+                    .slice(0, 5)
+                    .map((servico) => ({
+                        id: servico.id,
+                        name: servico.nome,
+                        detail: `${servico.duracao} min · ${servico.ativo ? 'Ativo' : 'Inativo'}`,
+                        date: servico.created_at,
+                    })),
+            },
+        ]
         : [];
 
     return (
