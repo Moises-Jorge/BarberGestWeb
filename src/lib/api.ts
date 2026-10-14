@@ -72,12 +72,71 @@ export async function deleteCliente(id: string): Promise<void> {
 }
 
 export async function getTodosServicos(): Promise<Servico[]> {
-    const response = await fetch(`${API_URL}/servicos`);
+    const response = await fetch(`${API_URL}/servicos`, { cache: 'no-store' });
 
     if (!response.ok)
         throw Error('Erro ao buscar serviços');
 
-    return response.json();
+    const servicos: ServicoApiResponse[] = await response.json();
+    return servicos.map(normalizeServico);
+}
+
+type ServicoApiResponse = Omit<Servico, 'created_at' | 'updated_at'> & {
+    created_at?: string;
+    updated_at?: string;
+    createdAt?: string;
+    updatedAt?: string;
+};
+
+function normalizeServico(servico: ServicoApiResponse): Servico {
+    return {
+        ...servico,
+        created_at: servico.created_at ?? servico.createdAt ?? '',
+        updated_at: servico.updated_at ?? servico.updatedAt ?? '',
+    };
+}
+
+export type ServicoInput = Pick<Servico, 'nome' | 'descricao' | 'preco' | 'duracao' | 'ativo'>;
+
+export async function getServicoById(id: number | string): Promise<Servico> {
+    const response = await fetch(`${API_URL}/servicos/${encodeURIComponent(id)}`, { cache: 'no-store' });
+
+    if (!response.ok)
+        throw Error('Erro ao buscar serviço');
+
+    const servico: ServicoApiResponse = await response.json();
+    return normalizeServico(servico);
+}
+
+export async function createServico(input: ServicoInput): Promise<void> {
+    const response = await fetch(`${API_URL}/servicos`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(input),
+    });
+
+    if (!response.ok)
+        throw Error('Erro ao criar serviço');
+}
+
+export async function updateServico(id: number, input: ServicoInput): Promise<void> {
+    const response = await fetch(`${API_URL}/servicos/${encodeURIComponent(id)}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(input),
+    });
+
+    if (!response.ok)
+        throw Error('Erro ao atualizar serviço');
+}
+
+export async function deleteServico(id: number): Promise<void> {
+    const response = await fetch(`${API_URL}/servicos/${encodeURIComponent(id)}`, {
+        method: 'DELETE',
+    });
+
+    if (!response.ok)
+        throw Error('Erro ao remover serviço');
 }
 
 export async function getTodosBarbeiros(): Promise<Barbeiro[]> {
