@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useCallback, useEffect, useState, type FormEvent } from 'react';
 import { ArrowUpRight, Check, Eye, LoaderCircle, Pencil, Plus, Search, Shield, ShieldOff, Trash2, X } from 'lucide-react';
 import { createBarbeiro, deleteBarbeiro, getTodosBarbeiros, updateBarbeiro, type BarbeiroInput } from '@/lib/api';
+import { ConfirmDeleteDialog } from '@/components/ui/confirm-delete-dialog';
 import type { Barbeiro } from '@/lib/types';
 
 type FormValues = {
@@ -38,6 +39,8 @@ export function BarbeirosTable() {
     const [form, setForm] = useState<FormValues>(emptyForm);
     const [isSaving, setIsSaving] = useState(false);
     const [busyId, setBusyId] = useState<string | null>(null);
+    const [barbeiroToDelete, setBarbeiroToDelete] = useState<Barbeiro | null>(null);
+    const [deleteError, setDeleteError] = useState<string | null>(null);
 
     const refresh = useCallback(async () => {
         setIsLoading(true);
@@ -118,15 +121,22 @@ export function BarbeirosTable() {
         }
     }
 
-    async function handleDelete(barbeiro: Barbeiro) {
-        if (!window.confirm(`Remover ${barbeiro.nome} da equipa? Esta ação não pode ser anulada.`)) return;
+    function handleDelete(barbeiro: Barbeiro) {
+        setDeleteError(null);
+        setBarbeiroToDelete(barbeiro);
+    }
+
+    async function confirmDelete() {
+        if (!barbeiroToDelete) return;
+
+        const barbeiro = barbeiroToDelete;
         setBusyId(barbeiro.id);
-        setError(null);
         try {
             await deleteBarbeiro(barbeiro.id);
             setBarbeiros((current) => current.filter((item) => item.id !== barbeiro.id));
+            setBarbeiroToDelete(null);
         } catch {
-            setError('Não foi possível remover este barbeiro.');
+            setDeleteError('Não foi possível remover este barbeiro. Tente novamente.');
         } finally {
             setBusyId(null);
         }
@@ -240,6 +250,21 @@ export function BarbeirosTable() {
                     </div>
                 </div>
             )}
+
+            <ConfirmDeleteDialog
+                open={barbeiroToDelete !== null}
+                itemName={barbeiroToDelete?.nome ?? ''}
+                itemType="barbeiro"
+                isDeleting={barbeiroToDelete !== null && busyId === barbeiroToDelete.id}
+                errorMessage={deleteError}
+                onConfirm={() => void confirmDelete()}
+                onClose={() => {
+                    if (busyId !== barbeiroToDelete?.id) {
+                        setBarbeiroToDelete(null);
+                        setDeleteError(null);
+                    }
+                }}
+            />
         </section>
     );
 }
