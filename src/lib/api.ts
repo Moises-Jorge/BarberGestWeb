@@ -1,8 +1,28 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
 import type { Cliente, Barbeiro, Servico } from '@/lib/types';
 
+export const API_URL = process.env.NEXT_PUBLIC_API_URL;
+const TOKEN_KEY = 'BarberAppToken';
+
+function getAuthHeaders(headers?: HeadersInit): Headers {
+    const requestHeaders = new Headers(headers);
+
+    if (typeof window !== 'undefined') {
+        const token = localStorage.getItem(TOKEN_KEY);
+        if (token) requestHeaders.set('Authorization', `Bearer ${token}`);
+    }
+
+    return requestHeaders;
+}
+
+function apiFetch(input: RequestInfo | URL, init: RequestInit = {}) {
+    return fetch(input, {
+        ...init,
+        headers: getAuthHeaders(init.headers),
+    });
+}
+
 export async function getTodosClients(): Promise<Cliente[]> {
-    const response = await fetch(`${API_URL}/clientes`, { cache: 'no-store' });
+    const response = await apiFetch(`${API_URL}/clientes`, { cache: 'no-store' });
 
     if (!response.ok)
         throw Error('Erro ao buscar clientes');
@@ -31,7 +51,7 @@ export type ClienteInput = Pick<Cliente, 'nome' | 'telefone'> & {
 };
 
 export async function getClienteById(id: string): Promise<Cliente> {
-    const response = await fetch(`${API_URL}/clientes/${encodeURIComponent(id)}`, { cache: 'no-store' });
+    const response = await apiFetch(`${API_URL}/clientes/${encodeURIComponent(id)}`, { cache: 'no-store' });
 
     if (!response.ok)
         throw Error('Erro ao buscar cliente');
@@ -41,7 +61,7 @@ export async function getClienteById(id: string): Promise<Cliente> {
 }
 
 export async function createCliente(input: ClienteInput): Promise<void> {
-    const response = await fetch(`${API_URL}/clientes`, {
+    const response = await apiFetch(`${API_URL}/clientes`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(input),
@@ -52,7 +72,7 @@ export async function createCliente(input: ClienteInput): Promise<void> {
 }
 
 export async function updateCliente(id: string, input: ClienteInput): Promise<void> {
-    const response = await fetch(`${API_URL}/clientes/${encodeURIComponent(id)}`, {
+    const response = await apiFetch(`${API_URL}/clientes/${encodeURIComponent(id)}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(input),
@@ -63,7 +83,7 @@ export async function updateCliente(id: string, input: ClienteInput): Promise<vo
 }
 
 export async function deleteCliente(id: string): Promise<void> {
-    const response = await fetch(`${API_URL}/clientes/${encodeURIComponent(id)}`, {
+    const response = await apiFetch(`${API_URL}/clientes/${encodeURIComponent(id)}`, {
         method: 'DELETE',
     });
 
@@ -72,7 +92,7 @@ export async function deleteCliente(id: string): Promise<void> {
 }
 
 export async function getTodosServicos(): Promise<Servico[]> {
-    const response = await fetch(`${API_URL}/servicos`, { cache: 'no-store' });
+    const response = await apiFetch(`${API_URL}/servicos`, { cache: 'no-store' });
 
     if (!response.ok)
         throw Error('Erro ao buscar serviços');
@@ -99,7 +119,7 @@ function normalizeServico(servico: ServicoApiResponse): Servico {
 export type ServicoInput = Pick<Servico, 'nome' | 'descricao' | 'preco' | 'duracao' | 'ativo'>;
 
 export async function getServicoById(id: number | string): Promise<Servico> {
-    const response = await fetch(`${API_URL}/servicos/${encodeURIComponent(id)}`, { cache: 'no-store' });
+    const response = await apiFetch(`${API_URL}/servicos/${encodeURIComponent(id)}`, { cache: 'no-store' });
 
     if (!response.ok)
         throw Error('Erro ao buscar serviço');
@@ -109,7 +129,7 @@ export async function getServicoById(id: number | string): Promise<Servico> {
 }
 
 export async function createServico(input: ServicoInput): Promise<void> {
-    const response = await fetch(`${API_URL}/servicos`, {
+    const response = await apiFetch(`${API_URL}/servicos`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(input),
@@ -120,7 +140,7 @@ export async function createServico(input: ServicoInput): Promise<void> {
 }
 
 export async function updateServico(id: number, input: ServicoInput): Promise<void> {
-    const response = await fetch(`${API_URL}/servicos/${encodeURIComponent(id)}`, {
+    const response = await apiFetch(`${API_URL}/servicos/${encodeURIComponent(id)}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(input),
@@ -131,7 +151,7 @@ export async function updateServico(id: number, input: ServicoInput): Promise<vo
 }
 
 export async function deleteServico(id: number): Promise<void> {
-    const response = await fetch(`${API_URL}/servicos/${encodeURIComponent(id)}`, {
+    const response = await apiFetch(`${API_URL}/servicos/${encodeURIComponent(id)}`, {
         method: 'DELETE',
     });
 
@@ -140,7 +160,7 @@ export async function deleteServico(id: number): Promise<void> {
 }
 
 export async function getTodosBarbeiros(): Promise<Barbeiro[]> {
-    const response = await fetch(`${API_URL}/barbeiros`, { cache: 'no-store' });
+    const response = await apiFetch(`${API_URL}/barbeiros`, { cache: 'no-store' });
 
     if (!response.ok)
         throw Error('Erro ao buscar barbeiros');
@@ -153,7 +173,7 @@ export type BarbeiroInput = Pick<Barbeiro, 'nome' | 'telefone' | 'h_entrada' | '
 };
 
 export async function getBarbeiroById(id: string): Promise<Barbeiro> {
-    const response = await fetch(`${API_URL}/barbeiros/${encodeURIComponent(id)}`, { cache: 'no-store' });
+    const response = await apiFetch(`${API_URL}/barbeiros/${encodeURIComponent(id)}`, { cache: 'no-store' });
 
     if (!response.ok)
         throw Error('Erro ao buscar barbeiro');
@@ -162,7 +182,7 @@ export async function getBarbeiroById(id: string): Promise<Barbeiro> {
 }
 
 export async function createBarbeiro(input: BarbeiroInput): Promise<void> {
-    const response = await fetch(`${API_URL}/barbeiros`, {
+    const response = await apiFetch(`${API_URL}/barbeiros`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(input),
@@ -174,7 +194,7 @@ export async function createBarbeiro(input: BarbeiroInput): Promise<void> {
 }
 
 export async function updateBarbeiro(id: string, input: BarbeiroInput): Promise<void> {
-    const response = await fetch(`${API_URL}/barbeiros/${encodeURIComponent(id)}`, {
+    const response = await apiFetch(`${API_URL}/barbeiros/${encodeURIComponent(id)}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(input),
@@ -186,7 +206,7 @@ export async function updateBarbeiro(id: string, input: BarbeiroInput): Promise<
 }
 
 export async function deleteBarbeiro(id: string): Promise<void> {
-    const response = await fetch(`${API_URL}/barbeiros/${encodeURIComponent(id)}`, {
+    const response = await apiFetch(`${API_URL}/barbeiros/${encodeURIComponent(id)}`, {
         method: 'DELETE',
     });
 
