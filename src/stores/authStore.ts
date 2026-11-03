@@ -10,7 +10,7 @@ export interface User {
 	id: string;
 	nome: string;
 	telefone: string;
-	imagemUrl: string;
+	imagemUrl?: string | null;
 	role: "BARBEIRO";
 	isAdmin: boolean;
 }
