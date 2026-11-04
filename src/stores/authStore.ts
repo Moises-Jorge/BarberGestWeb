@@ -41,7 +41,7 @@ export const useAuthStore = create<AuthState>()((set) => {
 			const token = localStorage.getItem(TOKEN_KEY);
 			if (token) {
 				// Pegar os dados do usuário com o token, se necessário
-				const data = await fetch(`${API_URL}/barberio/me`, {
+				const data = await fetch(`${API_URL}/auth/me`, {
 					headers: { 'Authorization': `Bearer ${token}` },
 				});
 				if (data.ok) {
